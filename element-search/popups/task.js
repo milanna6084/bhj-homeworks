@@ -17,5 +17,6 @@ for (let i=0 ; i < closeElementsCount; i++) {
 for (let i=0 ; i < showSuccessElementsCount; i++) {
     showSuccessElements.item(i).onclick = () => {
         modalSuccessWindow.className = 'modal modal_active';
+        modalMainWindow.className = 'modal';
     };
 }
