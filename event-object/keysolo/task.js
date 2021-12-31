@@ -4,6 +4,9 @@ class Game {
     this.wordElement = container.querySelector('.word');
     this.winsElement = container.querySelector('.status__wins');
     this.lossElement = container.querySelector('.status__loss');
+    this.timeElement = container.querySelector('.status__time');
+    this.wordLength;
+    this.newWord = true;
 
     this.reset();
 
@@ -17,18 +20,43 @@ class Game {
   }
 
   registerEvents() {
+    const newThis = this; 
+    let indexTimeInter;
+
+    document.addEventListener('keydown', function(event) {
+      if (newThis.newWord) {
+        indexTimeInter = setInterval(() => {
+          if (newThis.timeElement.textContent <= 0) {
+            newThis.fail(indexTimeInter); 
+            return;
+          }
+          
+          newThis.timeElement.innerText = newThis.timeElement.textContent - 1;
+        }, 1000);
+
+        newThis.newWord = false;
+      }
+
+      if (event.code[3] === newThis.currentSymbol.textContent.toUpperCase()) {
+        newThis.success(indexTimeInter);
+      } else {
+        newThis.fail(indexTimeInter);
+      }
+    });
+
     /*
       TODO:
       Написать обработчик события, который откликается
       на каждый введённый символ.
       В случае правильного ввода слова вызываем this.success()
       При неправильном вводе символа - this.fail();
-     */
+    */
   }
 
-  success() {
+  success(index) {
     this.currentSymbol.classList.add('symbol_correct');
     this.currentSymbol = this.currentSymbol.nextElementSibling;
+
     if (this.currentSymbol !== null) {
       return;
     }
@@ -37,21 +65,28 @@ class Game {
       alert('Победа!');
       this.reset();
     }
+
     this.setNewWord();
+    clearInterval(index);
   }
 
-  fail() {
+  fail(index) {
     if (++this.lossElement.textContent === 5) {
       alert('Вы проиграли!');
       this.reset();
     }
+
     this.setNewWord();
+    clearInterval(index);
   }
 
   setNewWord() {
     const word = this.getWord();
 
+    this.newWord = true;
     this.renderWord(word);
+    this.wordLength = this.wordElement.querySelectorAll('.symbol').length;
+    this.timeElement.textContent = this.wordLength;
   }
 
   getWord() {
@@ -86,5 +121,4 @@ class Game {
   }
 }
 
-new Game(document.getElementById('game'))
-
+new Game(document.getElementById('game'));
