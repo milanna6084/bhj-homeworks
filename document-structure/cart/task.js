@@ -5,7 +5,7 @@ const cart = document.querySelector('.cart__products');
 controls.forEach(element => {
     element.addEventListener('click', function (e) {
         if ((e.target === this.children[0])
-            && (+this.children[1].textContent > 0)) {
+            && (+this.children[1].textContent > 1)) {
             this.children[1].innerText = +this.children[1].textContent - 1;
         } else if (e.target === this.children[2]) {
             this.children[1].innerText = +this.children[1].textContent + 1;
@@ -19,10 +19,6 @@ productAdd.forEach(element => {
         let productId = product.dataset.id;
         let productImg = product.querySelector('img').getAttribute('src');
         let productQuantity = product.querySelector('.product__quantity-value').textContent.trim();
-
-        if (+productQuantity === 0) {
-            return;
-        }
 
         const item = Array.from(cart.children).find(i => i.dataset.id === productId);
 
